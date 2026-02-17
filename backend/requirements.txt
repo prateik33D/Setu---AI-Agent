@@ -1,0 +1,46 @@
+# Core Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+
+# Clerk Authentication - HANDLES ALL USER AUTH
+clerk-backend-api>=1.0.0
+
+# AI & Agents (orchestrator uses LLM service directly; pyautogen optional for future)
+groq>=0.9.0
+openai>=1.50.0
+
+# Google APIs (ALL FREE)
+google-auth==2.27.0
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.116.0
+
+# Other Integrations
+notion-client==2.2.1
+PyGithub==2.1.1
+slack-sdk==3.26.2
+discord.py==2.3.2
+
+# Database & Storage
+# chromadb==0.4.22
+aiosqlite==0.19.0
+sqlalchemy>=2.0.36
+
+# Utilities
+python-multipart==0.0.6
+httpx>=0.27.0
+websockets==12.0
+cryptography>=41.0.0
+python-dateutil>=2.8.2
+
+# JWT verification for Clerk (manual verify with JWKS)
+pyjwt[crypto]>=2.9.0
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+
+# NOTE: NO python-jose or passlib needed - Clerk handles JWT!

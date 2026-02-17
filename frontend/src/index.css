@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #ffffff;
+  overflow-x: hidden;
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.05), transparent 50%),
+    radial-gradient(circle at 0% 50%, rgba(203, 255, 0, 0.03), transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8FF00;
+}
+
+/* Glassmorphic card */
+@layer components {
+  .glass-card {
+    @apply bg-black/40 backdrop-blur-xl border border-white/[0.08] rounded-2xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-strong {
+    @apply bg-white/[0.07] backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+}
+
+/* Vertical Blue Line Animation */
+.animated-line {
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(14, 165, 233, 0) 15%,
+      rgba(14, 165, 233, 0.9) 50%,
+      rgba(14, 165, 233, 0) 85%,
+      transparent 100%);
+  filter: blur(4px);
+  box-shadow:
+    0 0 40px rgba(14, 165, 233, 0.9),
+    0 0 80px rgba(14, 165, 233, 0.6),
+    0 0 120px rgba(14, 165, 233, 0.3);
+  animation: moveLine 12s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes moveLine {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  95% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Marquee Styles */
+.marquee-container {
+  overflow: hidden;
+  padding: 16px 0;
+  position: relative;
+  z-index: 20;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 60px;
+  animation: scroll 25s linear infinite;
+  width: max-content;
+}
+
+.marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  white-space: nowrap;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.1rem;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Neon Button */
+.neon-button {
+  background: #B8FF00;
+  color: #000000;
+  border: none;
+  font-weight: 700;
+  box-shadow:
+    0 0 15px rgba(184, 255, 0, 0.3),
+    0 4px 10px rgba(184, 255, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  box-shadow:
+    0 0 30px rgba(184, 255, 0, 0.5),
+    0 6px 20px rgba(184, 255, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Grain Overlay */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Custom Cursor - Solid Circle */
+.custom-cursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: rgba(184, 255, 0, 1);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 20px rgba(184, 255, 0, 0.8),
+    0 0 40px rgba(184, 255, 0, 0.4);
+  transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+}
+
+.custom-cursor.hover {
+  width: 24px;
+  height: 24px;
+  background: rgba(184, 255, 0, 0.9);
+}
+
+.custom-cursor.click {
+  width: 12px;
+  height: 12px;
+}
+
+/* Card Hover Effects */
+.card,
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.card:hover,
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 40px rgba(184, 255, 0, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Typing cursor blink */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Subtle pulse */
+@keyframes subtle-pulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================================
+   SMOOTH TEXT TRANSITION ANIMATIONS
+   =============================================== */
+
+/* Fade out with slide up */
+@keyframes fade-out-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Fade in with slide up */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation classes for React components */
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-out-up {
+  animation: fade-out-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

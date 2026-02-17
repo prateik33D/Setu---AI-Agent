@@ -1,0 +1,73 @@
+
+============================================================
+ERROR: POST http://localhost:8000/api/v1/tasks/create
+  Exception: Client.__init__() got an unexpected keyword argument 'proxies'
+Traceback (most recent call last):
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 95, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 153, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\fastapi\routing.py", line 424, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\fastapi\routing.py", line 312, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\app\api\v1\endpoints\tasks.py", line 27, in create_task
+    orchestrator = OrchestratorAgent()
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\app\agents\orchestrator.py", line 17, in __init__
+    self.llm = LLMService()
+               ~~~~~~~~~~^^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\app\services\llm.py", line 17, in __init__
+    self.openai_client = OpenAI(api_key=openai_key) if openai_key else None
+                         ~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\openai\_client.py", line 112, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        version=__version__,
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        _strict_response_validation=_strict_response_validation,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Pratik\Desktop\setu-ai-17feb\backend\venv\Lib\site-packages\openai\_base_client.py", line 793, in __init__
+    self._client = http_client or SyncHttpxClientWrapper(
+                                  ~~~~~~~~~~~~~~~~~~~~~~^
+        base_url=base_url,
+        ^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+        follow_redirects=True,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
