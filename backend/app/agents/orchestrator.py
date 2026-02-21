@@ -47,13 +47,13 @@ class OrchestratorAgent:
         
         logger.info(f"LLM analysis result: {analysis}")
         
-        # Step 2: Post-LLM validation — force correct action type if service is known
+        # Step 2: Post-LLM validation — ensure the PRIMARY action matches
+        # but allow additional actions for multi-service workflows
         if service_hint and service_hint in self.llm.SERVICE_ACTION_MAP:
             expected_action = self.llm.SERVICE_ACTION_MAP[service_hint]
-            for action in analysis['actions']:
-                if action['type'] != expected_action:
-                    logger.warning(f"LLM returned '{action['type']}' but service is '{service_hint}', overriding to '{expected_action}'")
-                    action['type'] = expected_action
+            if analysis['actions'] and analysis['actions'][0]['type'] != expected_action:
+                logger.warning(f"LLM returned '{analysis['actions'][0]['type']}' as primary but service is '{service_hint}', overriding to '{expected_action}'")
+                analysis['actions'][0]['type'] = expected_action
         
         
         results = []

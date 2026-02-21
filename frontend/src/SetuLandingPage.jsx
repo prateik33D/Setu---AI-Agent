@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ExternalLink, Github, Menu, X, Check, Sparkles, ArrowRight, Zap, RefreshCw, PenTool, Mail, Calendar, FileText, HardDrive, MessageSquare, ChevronRight, Globe, Shield, Clock, Bot, Workflow, Star, Search, Code, Database, ShoppingBag, Image, Layers, LayoutTemplate, Briefcase, Volume2, ListTodo, ListChecks } from 'lucide-react';
+import { ExternalLink, Github, Menu, X, Check, Sparkles, ArrowRight, Zap, RefreshCw, PenTool, Mail, Calendar, FileText, HardDrive, MessageSquare, ChevronRight, Globe, Shield, Clock, Bot, Workflow, Star, Search, Code, Database, ShoppingBag, Image, Layers, LayoutTemplate, Briefcase, Volume2, ListTodo, ListChecks, Send } from 'lucide-react';
 import { SignInButton, SignUpButton, UserButton, useUser, useAuth } from '@clerk/clerk-react';
 import { useSetuAPI } from './services/api';
 import SignInPrompt from './components/SignInPrompt';
@@ -58,9 +58,7 @@ const appsData = {
         { name: 'Slack', image: SLACK_LOGO, features: 20, color: '#E01E5A' },
         { name: 'Discord', image: DISCORD_LOGO, features: 6, beta: true, color: '#5865F2' },
         { name: 'Twitter', icon: Globe, features: 28, beta: true, color: '#1DA1F2' },
-        { name: 'Microsoft Teams', icon: MessageSquare, features: 20, beta: true, color: '#6264A7' },
-        { name: 'WhatsApp', icon: MessageSquare, features: 15, beta: true, color: '#25D366' },
-        { name: 'Intercom', icon: MessageSquare, features: 14, beta: true, color: '#1F8EEA' }
+        { name: 'Telegram', icon: Send, features: 18, beta: true, color: '#26A5E4' }
     ],
     'Development': [
         { name: 'AgentQL', icon: Code, features: 3, beta: true },
@@ -448,9 +446,14 @@ const IntegrationPanel = ({
 
 
                             <div className="mt-6 space-y-2 text-left">
-                                {['Analyzing your request...', `Connecting to ${serviceName}...`, 'Executing task...'].map((step, i) => (
+                                {[
+                                    'Analyzing your request with AI...',
+                                    `Connecting to ${serviceName}...`,
+                                    'Extracting actions from request...',
+                                    'Executing workflow agents...'
+                                ].map((step, i) => (
                                     <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.02]">
-                                        <RefreshCw size={12} className="text-accent animate-spin flex-shrink-0" style={{ animationDelay: `${i * 0.2}s` }} />
+                                        <RefreshCw size={12} className="text-accent animate-spin flex-shrink-0" style={{ animationDelay: `${i * 0.3}s` }} />
                                         <span className="text-xs text-white/50">{step}</span>
                                     </div>
                                 ))}
@@ -472,7 +475,24 @@ const IntegrationPanel = ({
                             <p className="text-center font-semibold text-white mb-1 text-sm">
                                 {result.success ? 'Done!' : 'Something went wrong'}
                             </p>
-                            <p className="text-center text-white/50 text-sm mb-5">{result.message}</p>
+
+                            {/* Show per-action results */}
+                            {result.actionItems && result.actionItems.length > 0 ? (
+                                <div className="mt-3 mb-5 space-y-2">
+                                    {result.actionItems.map((item, idx) => (
+                                        <div key={idx} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${item.startsWith('✓') ? 'bg-green-500/5 border border-green-500/10' : 'bg-red-500/5 border border-red-500/10'}`}>
+                                            {item.startsWith('✓') ? (
+                                                <Check size={14} className="text-green-400 flex-shrink-0" />
+                                            ) : (
+                                                <X size={14} className="text-red-400 flex-shrink-0" />
+                                            )}
+                                            <span className="text-xs text-white/70">{item.replace(/^[✓✗]\s*/, '')}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-center text-white/50 text-sm mb-5">{result.message}</p>
+                            )}
 
 
                             <div className="flex gap-3">
@@ -758,16 +778,20 @@ export default function SetuLandingPage() {
             const response = await setuAPI.createTask(agentTaskInput, 'high', activeIntegration);
 
             if (response.status === 'completed') {
+                const actionItems = response.action_items || [];
                 setAgentResult({
                     success: true,
                     message: formatResult(response, activeIntegration),
+                    actionItems: actionItems.length > 1 ? actionItems : null,
                     data: response
                 });
             } else if (response.status === 'failed') {
-                const errorMsg = response.action_items?.[0] || 'Task failed. Check your API keys and connected accounts.';
+                const actionItems = response.action_items || [];
+                const errorMsg = actionItems[0] || 'Task failed. Check your API keys and connected accounts.';
                 setAgentResult({
                     success: false,
-                    message: errorMsg
+                    message: errorMsg,
+                    actionItems: actionItems.length > 0 ? actionItems : null,
                 });
             } else {
                 setAgentResult({
@@ -810,6 +834,12 @@ export default function SetuLandingPage() {
         }
 
         const actionItems = taskStatus.action_items || [];
+
+        // Multi-action summary
+        if (actionItems.length > 1) {
+            const successCount = actionItems.filter(item => item.startsWith('✓')).length;
+            return `${successCount} of ${actionItems.length} actions completed`;
+        }
 
         const successItem = actionItems.find(item => item.startsWith('✓'));
         if (successItem) return successItem;

@@ -39,20 +39,27 @@ class LLMService:
     def analyze_task(self, description: str, service_hint: str = None) -> dict:
         
         system_prompt = """You are a task analyzer for an AI automation platform. 
-        Extract actionable steps from user requests.
+        Extract actionable steps from user requests. A single request can trigger MULTIPLE actions.
         
         Available actions:
         - send_email: {to, subject, body}
-        - create_calendar_event: {summary, start_time (ISO format), duration_minutes, attendees (list), description}
+        - create_calendar_event: {summary, start_time (ISO format YYYY-MM-DDTHH:MM:SS), duration_minutes, attendees (list of valid emails only), description}
         - create_notion_page: {title, content (markdown)}
         - create_github_issue: {repo, title, body}
         - send_slack_message: {channel, text}
         - create_google_doc: {title, content}
         - create_spreadsheet: {title, data (2D array)}
         
+        IMPORTANT RULES:
+        1. If the user request involves MULTIPLE services, generate MULTIPLE actions in the actions array.
+        2. For example "Schedule meeting and create notes and email team" should produce 3 actions.
+        3. For calendar events, use ISO format for start_time (e.g., "2026-02-23T14:00:00").
+        4. Only include attendees if valid email addresses are explicitly mentioned.
+        5. Do NOT invent email addresses. If no email is specified, omit attendees.
+        
         Respond ONLY with valid JSON in this format:
         {
-            "actions": [{"type": "...", "parameters": {...}}],
+            "actions": [{"type": "...", "parameters": {...}}, ...],
             "required_services": ["google", "notion", etc]
         }
         
@@ -61,15 +68,16 @@ class LLMService:
         For calendar events, infer appropriate duration if not specified (default 60 minutes).
         """
 
-        # If a service hint is provided, add a strong constraint to the prompt
+        # If a service hint is provided, add a constraint but allow multi-action for complex requests
         if service_hint:
             required_action = self.SERVICE_ACTION_MAP.get(service_hint)
             if required_action:
                 system_prompt += f"""
         
-        CRITICAL INSTRUCTION: The user has selected the "{service_hint}" service.
-        You MUST use the action type "{required_action}" for this task.
-        Do NOT use any other action type. The user explicitly chose {service_hint}.
+        The user initiated this from the "{service_hint}" service panel.
+        The PRIMARY action MUST be "{required_action}".
+        If the request involves additional services (e.g., also send email, also create Notion page), 
+        include those as additional actions in the actions array.
         """
         
         # Add current date/time context so the LLM generates correct dates
