@@ -23,6 +23,7 @@ notion-client==2.2.1
 PyGithub==2.1.1
 slack-sdk==3.26.2
 discord.py==2.3.2
+aiohttp>=3.9.0
 
 # Database & Storage
 # chromadb==0.4.22

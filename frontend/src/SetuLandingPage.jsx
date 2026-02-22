@@ -257,6 +257,18 @@ const SERVICE_CONFIG = {
         ],
         placeholderText: 'e.g. Create meeting agenda document for tomorrow'
     },
+    'Discord': {
+        color: '#5865F2',
+        image: DISCORD_LOGO,
+        description: 'Send messages to Discord channels',
+        oauthType: 'none',
+        examples: [
+            'Send message to channel: Deploy is complete',
+            'Notify the team about the new release',
+            'Post standup update to dev channel',
+        ],
+        placeholderText: 'e.g. Send message to channel: Build deployed successfully'
+    },
 };
 
 const toolsGrid = [
@@ -729,7 +741,8 @@ export default function SetuLandingPage() {
         setAgentTaskInput('');
         setAgentResult(null);
 
-        const isConnected = connectedServices.includes(serviceName);
+        const config = SERVICE_CONFIG[serviceName];
+        const isConnected = connectedServices.includes(serviceName) || config?.oauthType === 'none';
         setPanelMode(isConnected ? 'task' : 'connect');
     };
 
@@ -752,7 +765,11 @@ export default function SetuLandingPage() {
 
             localStorage.setItem('setu_pending_service', serviceName);
 
-            if (oauthType === 'google') {
+            if (oauthType === 'none') {
+                // No OAuth needed — service uses server-side credentials (e.g. bot token)
+                setPanelMode('task');
+                return;
+            } else if (oauthType === 'google') {
                 const data = await setuAPI.initiateGoogleAuth();
             } else if (oauthType === 'notion') {
                 const data = await setuAPI.initiateNotionAuth();
@@ -1164,7 +1181,7 @@ export default function SetuLandingPage() {
 
 
                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button className="neon-button text-base px-8 py-4 rounded-lg w-full sm:w-auto min-w-[200px] group flex items-center justify-center gap-2">
+                    <button onClick={() => setIsAppsModalOpen(true)} className="neon-button text-base px-8 py-4 rounded-lg w-full sm:w-auto min-w-[200px] group flex items-center justify-center gap-2">
                         Start Automating Free
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </button>
@@ -1382,7 +1399,7 @@ export default function SetuLandingPage() {
                                         <tool.icon size={24} className="md:w-7 md:h-7" style={{ color: tool.color }} />
                                     )}
                                 </div>
-                                <span className="text-xs text-white/50 group-hover:text-white/70 font-medium transition-colors">{tool.name}</span>
+                                <span className="text-xs text-white/50 group-hover:text-white/70 font-medium transition-colors text-center">{tool.name}</span>
                             </div>
                         ))}
                     </div>
@@ -1458,6 +1475,24 @@ export default function SetuLandingPage() {
                         <p className="text-xs text-white/25">
                             © 2026 Setu, Inc. All rights reserved.
                         </p>
+                        <div className="flex items-center gap-3">
+                            {[
+                                { href: 'https://github.com/Insomniac-Coder0/Setu---AI-Agent', icon: <Github size={16} /> },
+                                { href: 'https://twitter.com', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg> },
+                                { href: 'https://linkedin.com', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg> },
+                                { href: 'mailto:contact@setu.ai', icon: <Mail size={16} /> },
+                            ].map(({ href, icon }, i) => (
+                                <a
+                                    key={i}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-9 h-9 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.07] flex items-center justify-center text-white/40 hover:text-white/70 transition-all duration-200"
+                                >
+                                    {icon}
+                                </a>
+                            ))}
+                        </div>
                         <div className="flex items-center gap-6">
                             <a href="#" className="text-xs text-white/30 hover:text-white/50 transition-colors">Privacy Policy</a>
                             <a href="#" className="text-xs text-white/30 hover:text-white/50 transition-colors">Terms of Service</a>

@@ -34,6 +34,7 @@ class LLMService:
         'Notion': 'create_notion_page',
         'GitHub': 'create_github_issue',
         'Slack': 'send_slack_message',
+        'Discord': 'send_discord_message',
     }
 
     def analyze_task(self, description: str, service_hint: str = None) -> dict:
@@ -47,6 +48,7 @@ class LLMService:
         - create_notion_page: {title, content (markdown)}
         - create_github_issue: {repo, title, body}
         - send_slack_message: {channel, text}
+        - send_discord_message: {channel_id, content}
         - create_google_doc: {title, content}
         - create_spreadsheet: {title, data (2D array)}
         

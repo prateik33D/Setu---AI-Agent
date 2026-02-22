@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     SLACK_CLIENT_SECRET: str | None = None
     SLACK_SIGNING_SECRET: str | None = None
 
+    # Discord
+    DISCORD_BOT_TOKEN: str | None = None
+    DISCORD_WEBHOOK_URL: str | None = None
+
     # AI
     GROQ_API_KEY: str | None = None
     OPENAI_API_KEY: str | None = None

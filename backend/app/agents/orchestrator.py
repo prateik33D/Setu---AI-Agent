@@ -7,6 +7,7 @@ from app.services.google.sheets import SheetsService
 from app.services.notion import NotionService
 from app.services.github import GitHubService
 from app.services.slack import SlackService
+from app.services.discord import DiscordService
 from app.core.database import get_user_credentials
 import logging
 
@@ -175,6 +176,14 @@ class OrchestratorAgent:
             return slack.send_message(
                 channel=params.get('channel', '#general'),
                 text=params.get('text', params.get('message', ''))
+            )
+        
+        # DISCORD
+        elif action_type == 'send_discord_message':
+            discord = DiscordService()
+            return await discord.send_message(
+                channel_id=params.get('channel_id', ''),
+                content=params.get('content', params.get('message', ''))
             )
         
         else:
