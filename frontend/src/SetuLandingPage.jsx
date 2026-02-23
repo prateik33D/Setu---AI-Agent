@@ -33,12 +33,12 @@ const appsData = {
     'Popular Apps': [
         { name: 'Gmail', image: GMAIL_LOGO, color: '#EA4335', features: 13 },
         { name: 'Google Drive', image: GDRIVE_LOGO, color: '#0F9D58', features: 21 },
-        { name: 'Slack', image: SLACK_LOGO, color: '#E01E5A', features: 20 },
+        { name: 'Slack', image: SLACK_LOGO, color: '#E01E5A', features: 20, beta: true },
         { name: 'Google Sheets', image: GSHEETS_LOGO, color: '#0F9D58', features: 23 },
         { name: 'Notion', image: NOTION_LOGO, color: '#FFFFFF', features: 28 },
         { name: 'GitHub', image: GITHUB_LOGO, color: '#FFFFFF', features: 17 },
-        { name: 'Asana', icon: Check, color: '#F06A6A', features: 37 },
-        { name: 'Salesforce', icon: Globe, color: '#00A1E0', features: 24 }
+        { name: 'Asana', icon: Check, color: '#F06A6A', features: 37, beta: true },
+        { name: 'Salesforce', icon: Globe, color: '#00A1E0', features: 24, beta: true }
     ],
     'Productivity': [
         { name: 'Dropbox', icon: HardDrive, features: 11, beta: true },
@@ -50,13 +50,13 @@ const appsData = {
         { name: 'Outlook', icon: Mail, features: 20, beta: true, color: '#0078D4' },
         { name: 'Google Docs', image: GDOCS_LOGO, features: 26, beta: true, color: '#4285F4' },
         { name: 'api2pdf', icon: FileText, features: 5, beta: true },
-        { name: 'Google Meet', image: GMEET_LOGO, features: 18, beta: true, color: '#00897B' },
-        { name: 'Google Sheets', image: GSHEETS_LOGO, features: 23, beta: true, color: '#0F9D58' },
-        { name: 'Google Calendar', image: GCALENDAR_LOGO, features: 31, beta: true, color: '#4285F4' },
+        { name: 'Google Meet', image: GMEET_LOGO, features: 18, color: '#00897B' },
+        { name: 'Google Sheets', image: GSHEETS_LOGO, features: 23, color: '#0F9D58' },
+        { name: 'Google Calendar', image: GCALENDAR_LOGO, features: 31, color: '#4285F4' },
     ],
     'Communication': [
-        { name: 'Slack', image: SLACK_LOGO, features: 20, color: '#E01E5A' },
-        { name: 'Discord', image: DISCORD_LOGO, features: 6, beta: true, color: '#5865F2' },
+        { name: 'Slack', image: SLACK_LOGO, features: 20, beta: true, color: '#E01E5A' },
+        { name: 'Discord', image: DISCORD_LOGO, features: 6, color: '#5865F2' },
         { name: 'Twitter', icon: Globe, features: 28, beta: true, color: '#1DA1F2' },
         { name: 'Telegram', icon: Send, features: 18, beta: true, color: '#26A5E4' }
     ],
@@ -151,7 +151,7 @@ const integrationsList = [
     { name: 'Notion', image: NOTION_LOGO, color: '#FFFFFF' },
     { name: 'Google Drive', image: GDRIVE_LOGO, color: '#0F9D58' },
     { name: 'GitHub', image: GITHUB_LOGO, color: '#FFFFFF' },
-    { name: 'Slack', image: SLACK_LOGO, color: '#E01E5A' },
+    { name: 'Google Meet', image: GMEET_LOGO, color: '#00897B' },
 ];
 
 const SERVICE_CONFIG = {
