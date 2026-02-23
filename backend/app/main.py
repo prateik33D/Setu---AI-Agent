@@ -7,12 +7,13 @@ from app.core.database import init_db
 from app.api.api import api_router
 import traceback
 import sys
+import os
 
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
-]
+# Build unified CORS origins from config + FRONTEND_URL env var
+ALLOWED_ORIGINS = list(settings.BACKEND_CORS_ORIGINS)
+_frontend_url = os.getenv("FRONTEND_URL", "")
+if _frontend_url and _frontend_url not in ALLOWED_ORIGINS:
+    ALLOWED_ORIGINS.append(_frontend_url)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
