@@ -118,6 +118,18 @@ async def save_user_credentials(
         
         await session.commit()
 
+async def delete_user_credentials(user_id: str, service_type: str):
+    """Delete credentials for a user's service integration"""
+    from sqlalchemy import delete as sql_delete
+    async with AsyncSessionLocal() as session:
+        await session.execute(
+            sql_delete(DBIntegration).where(
+                DBIntegration.user_id == user_id,
+                DBIntegration.service_type == service_type
+            )
+        )
+        await session.commit()
+
 async def init_db():
     """Initialize database tables"""
     async with engine.begin() as conn:

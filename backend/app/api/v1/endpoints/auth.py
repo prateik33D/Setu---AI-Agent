@@ -4,11 +4,14 @@ from typing import Dict
 from urllib.parse import urlencode
 from app.api import deps
 from app.core.config import settings
-from app.core.database import save_user_credentials
+from app.core.database import save_user_credentials, get_user_credentials, delete_user_credentials
 import httpx
 import secrets
 import base64
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 def _get_frontend_url() -> str:
     """Get the frontend URL for OAuth redirects."""
@@ -24,9 +27,25 @@ async def login_google(current_user: dict = Depends(deps.get_current_user)):
     if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_REDIRECT_URI:
         raise HTTPException(status_code=500, detail="Google credentials not configured")
     
+    user_id = current_user.get('sub') or current_user.get('id', 'unknown')
+    
+    # Revoke existing Google token so re-connect always gets a fresh refresh_token
+    try:
+        existing_creds = await get_user_credentials(user_id, 'google')
+        if existing_creds and existing_creds.get('access_token'):
+            async with httpx.AsyncClient() as client:
+                await client.post(
+                    "https://oauth2.googleapis.com/revoke",
+                    params={"token": existing_creds['access_token']}
+                )
+            # Delete old credentials from DB
+            await delete_user_credentials(user_id, 'google')
+            logger.info(f"Revoked old Google token for user {user_id}")
+    except Exception as e:
+        logger.warning(f"Could not revoke old Google token (continuing): {e}")
+    
     # Generate state to prevent CSRF
     state = secrets.token_urlsafe(32)
-    user_id = current_user.get('sub') or current_user.get('id', 'unknown')
     oauth_states[state] = user_id
     
     params = {
