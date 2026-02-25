@@ -173,7 +173,7 @@ const SERVICE_CONFIG = {
         description: 'Create events, reminders, meetings',
         oauthType: 'google',
         examples: [
-            'Set reminder Feb 20 at 2pm for team standup',
+            'Set reminder March 20 at 2pm for team standup',
             'Schedule meeting tomorrow at 3pm with john@test.com',
             'Create weekly sync every Monday at 10am',
         ],
@@ -241,7 +241,7 @@ const SERVICE_CONFIG = {
         description: 'Create and update spreadsheets',
         oauthType: 'google',
         examples: [
-            'Create budget spreadsheet for Q1',
+            'Create budget spreadsheet for Q1 2026',
             'Add row to expenses sheet: $500 for hosting',
         ],
         placeholderText: 'e.g. Create a budget spreadsheet for Q1 2026'
