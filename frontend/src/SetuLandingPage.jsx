@@ -803,7 +803,7 @@ export default function SetuLandingPage() {
                 });
             } else if (response.status === 'failed') {
                 const actionItems = response.action_items || [];
-                const errorMsg = actionItems[0] || 'Task failed. Check your API keys and connected accounts.';
+                const errorMsg = actionItems[0] || 'Task failed.';
                 setAgentResult({
                     success: false,
                     message: errorMsg,
